@@ -1,0 +1,25 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+## Packages
+packages/
+*.nupkg
+
+## Databases
+*.db
+*.db-shm
+*.db-wal
+
+## Logs
+*.log
+logs/
+
+## Config
+appsettings.Development.json
+
+## Ignore environment variable files
+.env

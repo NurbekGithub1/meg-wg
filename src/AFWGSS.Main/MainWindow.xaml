@@ -1,0 +1,57 @@
+﻿<mah:MetroWindow x:Class="AFWGSS.Main.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        Title="AFWGSS - Air Force War Game Simulation System" 
+        Height="900" Width="1600"
+        WindowState="Maximized">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+
+        <!-- Menu -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="New Scenario" Command="{Binding NewScenarioCommand}"/>
+                <MenuItem Header="Open Scenario" Command="{Binding OpenScenarioCommand}"/>
+                <Separator/>
+                <MenuItem Header="Exit" Command="{Binding ExitCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Module Switcher -->
+        <ToolBar Grid.Row="1" Height="60">
+            <RadioButton Content="POE" IsChecked="True" 
+                        Command="{Binding SwitchModuleCommand}" 
+                        CommandParameter="POE"/>
+            <RadioButton Content="DAAOE" 
+                        Command="{Binding SwitchModuleCommand}" 
+                        CommandParameter="DAAOE"/>
+            <RadioButton Content="GP&amp;S" 
+                        Command="{Binding SwitchModuleCommand}" 
+                        CommandParameter="GPS"/>
+            <RadioButton Content="AAR" 
+                        Command="{Binding SwitchModuleCommand}" 
+                        CommandParameter="AAR"/>
+            <RadioButton Content="WGC" 
+                        Command="{Binding SwitchModuleCommand}" 
+                        CommandParameter="WGC"/>
+        </ToolBar>
+
+        <!-- Module Content -->
+        <ContentControl Grid.Row="2" 
+                       Content="{Binding CurrentModule}"/>
+
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3">
+            <StatusBarItem Content="{Binding SimulationStatus}"/>
+            <StatusBarItem Content="{Binding CurrentUser}"/>
+            <StatusBarItem Content="{Binding CurrentTime}"/>
+        </StatusBar>
+    </Grid>
+</mah:MetroWindow>

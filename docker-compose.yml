@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - "8086:8086"                  # Web UI/API
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_INIT_USER}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_INIT_PASS}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_INIT_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUX_INIT_BUCKET}
+      DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUX_INIT_RETENTION}
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_INIT_TOKEN}
+    volumes:
+      - influx-data:/var/lib/influxdb2
+    healthcheck:
+      test: ["CMD", "influx", "ping", "-host", "http://localhost:8086"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    # Откройте порт наружу только если нужно с хоста; иначе можно удалить строку ports.
+    ports:
+      - "6379:6379"
+    command: >
+      sh -c "redis-server
+      --appendonly yes
+      --save 60 100
+      --loglevel warning
+      --requirepass $$REDIS_PASSWORD"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD PING | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  geoserver:
+    image: kartoza/geoserver:2.24.2
+    container_name: geoserver
+    restart: unless-stopped
+    ports:
+      - "8080:8080"      # веб-интерфейс: http://localhost:8080/geoserver
+    environment:
+      GEOSERVER_ADMIN_USER: admin
+      GEOSERVER_ADMIN_PASSWORD: ChangeThis_!Strong  # замените
+      # Опционально: память JVM
+      # JAVA_OPTS: "-Xms512m -Xmx2g"
+    volumes:
+      - geoserver-data:/opt/geoserver/data_dir
+
+volumes:
+  influx-data: {}
+  redis-data: {}
+  geoserver-data: {}
