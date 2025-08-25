@@ -1,25 +1,27 @@
 ﻿using AFWGSS.Shared.Interfaces;
+using AFWGSS.POE.Views;
+using System.Windows.Controls;
 
 namespace AFWGSS.POE
 {
     public class POEModule : IModule
     {
         public string Name => "Preparation of Exercise";
-        public UserControl View { get; private set; }
+        public UserControl View { get; private set; } = null!;
 
         public void Initialize()
         {
             View = new POEView();
         }
 
-        public void Activate()
+        public void Activate() 
         {
-            // Активация модуля
+            // Восстановление состояния при активации
         }
-
-        public void Deactivate()
+        
+        public void Deactivate() 
         {
-            // Деактивация без уничтожения
+            // Сохранение состояния при деактивации
         }
     }
 }

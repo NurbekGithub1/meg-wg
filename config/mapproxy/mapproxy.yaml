@@ -1,0 +1,23 @@
+﻿services:
+  demo:
+  tms:
+  wms:
+    md:
+      title: "AFWGSS MapProxy"
+      abstract: "Test WMS via MapProxy"
+
+sources:
+  osm_tiles:
+    type: tile
+    url: https://tile.openstreetmap.org/{z}/{x}/{y}.png
+    grid: GLOBAL_WEBMERCATOR
+
+caches:
+  osm_cache:
+    grids: [GLOBAL_WEBMERCATOR]
+    sources: [osm_tiles]
+
+layers:
+  - name: osm
+    title: OpenStreetMap
+    sources: [osm_cache]
