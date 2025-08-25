@@ -20,4 +20,13 @@
     <PackageReference Include="StackExchange.Redis" Version="2.7.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\AFWGSS.Shared.csproj" />
+    <ProjectReference Include="..\Core\AFWGSS.Core.csproj" />
+    <ProjectReference Include="..\Modules\POE\AFWGSS.POE.csproj" />
+    <ProjectReference Include="..\Modules\DAAOE\AFWGSS.DAAOE.csproj" />
+    <ProjectReference Include="..\Modules\AAR\AFWGSS.AAR.csproj" />
+    <ProjectReference Include="..\Modules\WGC\AFWGSS.WGC.csproj" />
+  </ItemGroup>
+
 </Project>

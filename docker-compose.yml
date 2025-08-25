@@ -1,24 +1,23 @@
-version: "3.9"
-
 services:
   influxdb:
     image: influxdb:2.7
     container_name: influxdb
     restart: unless-stopped
     ports:
-      - "8086:8086"                  # Web UI/API
+      - "127.0.0.1:8086:8086"
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_INIT_USER}
       DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_INIT_PASS}
       DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_INIT_ORG}
       DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUX_INIT_BUCKET}
-      DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUX_INIT_RETENTION}
+      DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUX_INIT_RETENTION:-0}
       DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_INIT_TOKEN}
     volumes:
       - influx-data:/var/lib/influxdb2
+      - influx-config:/etc/influxdb2
     healthcheck:
-      test: ["CMD", "influx", "ping", "-host", "http://localhost:8086"]
+      test: ["CMD", "influx", "ping", "--host", "http://localhost:8086"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -27,21 +26,16 @@ services:
     image: redis:7-alpine
     container_name: redis
     restart: unless-stopped
-    # Откройте порт наружу только если нужно с хоста; иначе можно удалить строку ports.
     ports:
-      - "6379:6379"
-    command: >
-      sh -c "redis-server
-      --appendonly yes
-      --save 60 100
-      --loglevel warning
-      --requirepass $$REDIS_PASSWORD"
+      - "127.0.0.1:6379:6379"
+    # массив команд = устойчиво к YAML-отступам; $$ = экранирование для Compose
+    command: ["sh", "-lc", "exec redis-server --appendonly yes --save 60 100 --loglevel warning --requirepass \"$$REDIS_PASSWORD\""]
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD PING | grep PONG"]
+      test: ["CMD-SHELL", "redis-cli -h 127.0.0.1 -a $$REDIS_PASSWORD PING | grep -q PONG"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -51,16 +45,32 @@ services:
     container_name: geoserver
     restart: unless-stopped
     ports:
-      - "8080:8080"      # веб-интерфейс: http://localhost:8080/geoserver
+      - "127.0.0.1:8080:8080"
     environment:
-      GEOSERVER_ADMIN_USER: admin
-      GEOSERVER_ADMIN_PASSWORD: ChangeThis_!Strong  # замените
-      # Опционально: память JVM
-      # JAVA_OPTS: "-Xms512m -Xmx2g"
+      GEOSERVER_ADMIN_USER: ${GEOSERVER_ADMIN_USER}
+      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_ADMIN_PASSWORD}
     volumes:
       - geoserver-data:/opt/geoserver/data_dir
 
+  mapproxy:
+    image: kartoza/mapproxy:latest
+    container_name: mapproxy
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8080"
+    volumes:
+      - ./config/mapproxy:/mapproxy
+      - mapproxy-cache:/mapproxy_cache
+    # опционально:
+    # healthcheck:
+    #   test: ["CMD-SHELL", "wget -qO- http://localhost:8080/demo/ >/dev/null 2>&1 || exit 1"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 20
+
 volumes:
   influx-data: {}
+  influx-config: {}
   redis-data: {}
   geoserver-data: {}
+  mapproxy-cache: {}

@@ -1,4 +1,6 @@
-﻿namespace AFWGSS.Shared.Interfaces
+﻿using System.Windows.Controls;
+
+namespace AFWGSS.Shared.Interfaces
 {
     public interface IModule
     {

@@ -1,6 +1,6 @@
-﻿
-using Prism.Unity;
+﻿using Prism.Unity;
 using Prism.Ioc;
+using Prism.Modularity;
 using System.Windows;
 
 namespace AFWGSS.Main
@@ -14,19 +14,13 @@ namespace AFWGSS.Main
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            // Регистрация сервисов
-            containerRegistry.RegisterSingleton<ISimulationCore, SimulationCore>();
-            containerRegistry.RegisterSingleton<IDatabaseService, DatabaseService>();
-
-            // Регистрация модулей
-            containerRegistry.Register<IPOEModule, POEModule>();
-            containerRegistry.Register<IDAAOEModule, DAAOEModule>();
-            containerRegistry.Register<IAARModule, AARModule>();
+            // Пока закомментируем, создадим позже
+            // containerRegistry.RegisterSingleton<ISimulationCore, SimulationCore>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            // Модули будут загружаться динамически
+            // Модули будут добавлены позже
         }
     }
 }
