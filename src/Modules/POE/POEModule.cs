@@ -1,27 +1,19 @@
-﻿using AFWGSS.Shared.Interfaces;
 using AFWGSS.POE.Views;
-using System.Windows.Controls;
+using Prism.Ioc;
+using Prism.Modularity;
 
 namespace AFWGSS.POE
 {
     public class POEModule : IModule
     {
-        public string Name => "Preparation of Exercise";
-        public UserControl View { get; private set; } = null!;
-
-        public void Initialize()
+        public void OnInitialized(IContainerProvider containerProvider)
         {
-            View = new POEView();
+            // Инициализация модуля при необходимости
         }
 
-        public void Activate() 
+        public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            // Восстановление состояния при активации
-        }
-        
-        public void Deactivate() 
-        {
-            // Сохранение состояния при деактивации
+            containerRegistry.RegisterForNavigation<POEMainView>();
         }
     }
 }

@@ -1,22 +1,23 @@
-﻿using AFWGSS.Shared.Interfaces;
+﻿using Prism.Ioc;
+using Prism.Modularity;
 using System.Windows.Controls;
 
 namespace AFWGSS.AAR
 {
     public class AARModule : IModule
     {
-        public string Name => "After Action Review";
-        public UserControl View { get; private set; } = null!;
-
-        public void Initialize()
+        public void OnInitialized(IContainerProvider containerProvider)
         {
-            View = new AARView();
+            // Пока ничего не делаем
         }
 
-        public void Activate() { }
-        public void Deactivate() { }
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterForNavigation<AARView>();
+        }
     }
     
+    // Этот View тоже нужно зарегистрировать для навигации
     public class AARView : UserControl
     {
         public AARView()

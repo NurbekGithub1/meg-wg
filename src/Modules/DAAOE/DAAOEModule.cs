@@ -1,22 +1,23 @@
-﻿using AFWGSS.Shared.Interfaces;
+﻿using Prism.Ioc;
+using Prism.Modularity;
 using System.Windows.Controls;
 
 namespace AFWGSS.DAAOE
 {
     public class DAAOEModule : IModule
     {
-        public string Name => "Direction, Analysis and Animation of Exercises";
-        public UserControl View { get; private set; } = null!;
-
-        public void Initialize()
+        public void OnInitialized(IContainerProvider containerProvider)
         {
-            View = new DAAOEView();
+            // Пока ничего не делаем
         }
 
-        public void Activate() { }
-        public void Deactivate() { }
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            // Регистрируем View этого модуля для навигации
+            containerRegistry.RegisterForNavigation<DAAOEView>();
+        }
     }
-    
+
     public class DAAOEView : UserControl
     {
         public DAAOEView()

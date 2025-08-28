@@ -1,7 +1,8 @@
-﻿using Prism.Unity;
+﻿using System.Windows;
+using Prism.DryIoc;
 using Prism.Ioc;
 using Prism.Modularity;
-using System.Windows;
+using Prism.Navigation.Regions;
 
 namespace AFWGSS.Main
 {
@@ -14,13 +15,28 @@ namespace AFWGSS.Main
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            // Пока закомментируем, создадим позже
-            // containerRegistry.RegisterSingleton<ISimulationCore, SimulationCore>();
+            // Регистрация представлений для навигации
+            containerRegistry.RegisterForNavigation<POE.Views.POEMainView>("POEMainView");
+            containerRegistry.RegisterForNavigation<DAAOE.DAAOEView>("DAAOEView");
+            containerRegistry.RegisterForNavigation<AAR.AARView>("AARView");
+            containerRegistry.RegisterForNavigation<WGC.WGCView>("WGCView");
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            // Модули будут добавлены позже
+            moduleCatalog.AddModule<POE.POEModule>();
+            moduleCatalog.AddModule<DAAOE.DAAOEModule>();
+            moduleCatalog.AddModule<AAR.AARModule>();
+            moduleCatalog.AddModule<WGC.WGCModule>();
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            // Навигация к начальному модулю
+            var regionManager = Container.Resolve<IRegionManager>();
+            regionManager.RequestNavigate("ContentRegion", "POEMainView");
         }
     }
 }
