@@ -1,0 +1,10 @@
+﻿<Window x:Class="AFWGSS.POE.Views.BehaviorEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Behavior Tree Editor" Height="700" Width="1200">
+    <Grid>
+        <TextBlock Text="Behavior Editor - To be implemented" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"/>
+    </Grid>
+</Window>

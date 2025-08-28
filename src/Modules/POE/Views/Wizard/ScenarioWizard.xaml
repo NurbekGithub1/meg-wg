@@ -1,0 +1,36 @@
+<Window x:Class="AFWGSS.POE.Views.Wizard.ScenarioWizard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Scenario Creation Wizard" 
+        Height="600" Width="800"
+        WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Content area for steps -->
+        <Frame Name="StepFrame" NavigationUIVisibility="Hidden"/>
+        
+        <!-- Navigation buttons -->
+        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0,1,0,0">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Name="StepIndicator" Text="Step 1 of 5"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+					<Button Name="BackButton" Content="Back" Width="80" Margin="5"/>
+					<Button Name="NextButton" Content="Next" Width="80" Margin="5"/>
+                    <Button Name="FinishButton" Content="Finish" Width="80" Margin="5" 
+                            Visibility="Collapsed"/>
+                    <Button Content="Cancel" Width="80" Margin="5" Click="Cancel_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

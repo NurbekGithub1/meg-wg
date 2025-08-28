@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="AFWGSS.POE.Views.POEMainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" Height="40">
+            <Button Content="New Scenario" Command="{Binding NewScenarioCommand}" ToolTip="Start wizard"/>
+            <Button Content="Load Scenario" Command="{Binding LoadScenarioCommand}"/>
+            <Separator/>
+            <Button Content="Import ATO" Command="{Binding ImportATOCommand}"/>
+            <Button Content="Import ACO" Command="{Binding ImportACOCommand}"/>
+            <Separator/>
+            <Button Content="Add Entity" Command="{Binding AddEntityCommand}"/>
+            <Button Content="Edit Entity" Command="{Binding EditEntityCommand}"/>
+            <Button Content="Delete Entity" Command="{Binding DeleteEntityCommand}"/>
+        </ToolBar>
+        
+        <!-- Основное содержимое модуля -->
+        <Grid>
+            <!-- Здесь будет основной контент POE -->
+            <TextBlock Text="POE Module Content" 
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center"/>
+        </Grid>
+    </DockPanel>
+</UserControl>

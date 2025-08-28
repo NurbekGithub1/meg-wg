@@ -1,0 +1,10 @@
+﻿<Window x:Class="AFWGSS.POE.Views.MOE.MOEEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Modeling of Entities (MOE)" Height="700" Width="1000">
+    <Grid>
+        <TextBlock Text="MOE Editor - To be implemented" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"/>
+    </Grid>
+</Window>
