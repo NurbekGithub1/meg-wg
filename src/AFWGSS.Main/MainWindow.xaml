@@ -12,26 +12,20 @@
         <DockPanel LastChildFill="True">
 
             <!-- Верхняя панель навигации -->
-            <ToolBarTray DockPanel.Dock="Top">
-                <ToolBar>
-                    <TextBlock Text="Modules:" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                    <RadioButton Content="POE"   IsChecked="True"
-                                 Command="{Binding NavigateCommand}"
-                                 CommandParameter="{x:Static shared:ViewKeys.POEMain}"
-                                 Margin="0,0,8,0"/>
-                    <RadioButton Content="DAAOE"
-                                 Command="{Binding NavigateCommand}"
-                                 CommandParameter="{x:Static shared:ViewKeys.DAAOE}"
-                                 Margin="0,0,8,0"/>
-                    <RadioButton Content="AAR"
-                                 Command="{Binding NavigateCommand}"
-                                 CommandParameter="{x:Static shared:ViewKeys.AAR}"
-                                 Margin="0,0,8,0"/>
-                    <RadioButton Content="WGC"
-                                 Command="{Binding NavigateCommand}"
-                                 CommandParameter="{x:Static shared:ViewKeys.WGC}"/>
-                </ToolBar>
-            </ToolBarTray>
+<ToolBar>
+    <RadioButton Content="POE" IsChecked="True"
+                 Command="{Binding NavigateCommand}" 
+                 CommandParameter="{x:Static shared:ViewKeys.POEMain}"/>
+    <RadioButton Content="DAAOE"
+                 Command="{Binding NavigateCommand}" 
+                 CommandParameter="{x:Static shared:ViewKeys.DAAOE}"/>
+    <RadioButton Content="AAR"
+                 Command="{Binding NavigateCommand}" 
+                 CommandParameter="{x:Static shared:ViewKeys.AAR}"/>
+    <RadioButton Content="WGC"
+                 Command="{Binding NavigateCommand}" 
+                 CommandParameter="{x:Static shared:ViewKeys.WGC}"/>
+</ToolBar>
 
             <!-- Основной регион контента -->
             <ContentControl prism:RegionManager.RegionName="{x:Static shared:RegionNames.ContentRegion}"/>
