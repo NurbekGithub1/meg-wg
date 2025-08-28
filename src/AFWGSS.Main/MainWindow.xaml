@@ -1,79 +1,40 @@
-﻿<mah:MetroWindow x:Class="AFWGSS.Main.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-        xmlns:prism="http://prismlibrary.com/"
-        Title="AFWGSS - Air Force War Game Simulation System" 
-        Height="900" Width="1600"
-        WindowState="Maximized">
-    
+﻿<!-- src/AFWGSS.Main/MainWindow.xaml -->
+<mah:MetroWindow x:Class="AFWGSS.Main.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:prism="http://prismlibrary.com/"
+                 xmlns:shared="clr-namespace:AFWGSS.Shared;assembly=AFWGSS.Shared"
+                 Title="AFWGSS" Height="720" Width="1280"
+                 prism:ViewModelLocator.AutoWireViewModel="True">
+
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
+        <DockPanel LastChildFill="True">
 
-        <Menu Grid.Row="0" Background="LightGray">
-            <MenuItem Header="_File">
-                <MenuItem Header="_New Scenario"/>
-                <MenuItem Header="_Open Scenario"/>
-                <Separator/>
-                <MenuItem Header="E_xit" Click="MenuItem_Exit_Click"/>
-            </MenuItem>
-            <MenuItem Header="_Edit">
-                <MenuItem Header="_Undo"/>
-                <MenuItem Header="_Redo"/>
-            </MenuItem>
-            <MenuItem Header="_View">
-                <MenuItem Header="_2D Map"/>
-                <MenuItem Header="_3D View"/>
-            </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="_About"/>
-            </MenuItem>
-        </Menu>
+            <!-- Верхняя панель навигации -->
+            <ToolBarTray DockPanel.Dock="Top">
+                <ToolBar>
+                    <TextBlock Text="Modules:" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                    <RadioButton Content="POE"   IsChecked="True"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static shared:ViewKeys.POEMain}"
+                                 Margin="0,0,8,0"/>
+                    <RadioButton Content="DAAOE"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static shared:ViewKeys.DAAOE}"
+                                 Margin="0,0,8,0"/>
+                    <RadioButton Content="AAR"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static shared:ViewKeys.AAR}"
+                                 Margin="0,0,8,0"/>
+                    <RadioButton Content="WGC"
+                                 Command="{Binding NavigateCommand}"
+                                 CommandParameter="{x:Static shared:ViewKeys.WGC}"/>
+                </ToolBar>
+            </ToolBarTray>
 
-        <ToolBar Grid.Row="1" Height="60" Background="AliceBlue">
-            <ToolBar.Resources>
-                <Style TargetType="RadioButton">
-                    <Setter Property="Width" Value="100"/>
-                    <Setter Property="Height" Value="50"/>
-                    <Setter Property="Margin" Value="5"/>
-                    <Setter Property="FontSize" Value="14"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                </Style>
-            </ToolBar.Resources>
-            
-            <Label Content="Modules:" VerticalAlignment="Center" FontWeight="Bold"/>
-            <Separator/>
-            
-            <RadioButton Content="POE"   IsChecked="True" Tag="POEMainView" Click="ModuleButton_Click"/>
-            <RadioButton Content="DAAOE" Tag="DAAOEView"   Click="ModuleButton_Click"/>
-            <RadioButton Content="GP&amp;S" IsEnabled="False"/>
-            <RadioButton Content="AAR"   Tag="AARView"     Click="ModuleButton_Click"/>
-            <RadioButton Content="WGC"   Tag="WGCView"     Click="ModuleButton_Click"/>
-        </ToolBar>
-
-        <ContentControl Grid.Row="2" prism:RegionManager.RegionName="ContentRegion" Margin="5" BorderBrush="Gray" BorderThickness="1"/>
-
-        <StatusBar Grid.Row="3" Background="LightGray">
-            <StatusBarItem>
-                <TextBlock Text="Status: Ready"/>
-            </StatusBarItem>
-            <Separator/>
-            <StatusBarItem>
-                <TextBlock Name="CurrentModuleText" Text="Module: POE"/>
-            </StatusBarItem>
-            <Separator/>
-            <StatusBarItem>
-                <TextBlock Text="Simulation: Stopped"/>
-            </StatusBarItem>
-            <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="Time: 00:00:00"/>
-            </StatusBarItem>
-        </StatusBar>
+            <!-- Основной регион контента -->
+            <ContentControl prism:RegionManager.RegionName="{x:Static shared:RegionNames.ContentRegion}"/>
+        </DockPanel>
     </Grid>
 </mah:MetroWindow>

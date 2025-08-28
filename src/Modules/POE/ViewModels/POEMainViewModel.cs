@@ -1,73 +1,117 @@
-﻿// AFWGSS.POE/ViewModels/POEMainViewModel.cs
-
+﻿// src/Modules/POE/ViewModels/POEMainViewModel.cs
+using System.Collections.ObjectModel;
 using Prism.Mvvm;
 using Prism.Commands;
-using System.Windows.Input;
-// Добавьте using для ваших сервисов и моделей
+using Prism.Dialogs;
 
 namespace AFWGSS.POE.ViewModels
 {
     public class POEMainViewModel : BindableBase
     {
-        // Вместо прямого создания окон мы будем использовать сервис
-        // private readonly IDialogService _dialogService;
+        private readonly IDialogService _dialogs;
 
-        public ICommand NewScenarioCommand { get; }
-        public ICommand LoadScenarioCommand { get; }
-        public ICommand ImportATOCommand { get; }
-        public ICommand ImportACOCommand { get; }
-        public ICommand AddEntityCommand { get; }
-        public ICommand EditEntityCommand { get; }
-        public ICommand DeleteEntityCommand { get; }
-        // ... и так далее для всех кнопок
-        public POEMainViewModel()
+        // Инициализируем сразу — снимает CS8618
+        private ObservableCollection<string> _entities = new();
+        public ObservableCollection<string> Entities
         {
-            NewScenarioCommand = new DelegateCommand(ExecuteNewScenario);
-            LoadScenarioCommand = new DelegateCommand(ExecuteLoadScenario);
-            ImportATOCommand = new DelegateCommand(ExecuteImportATO);
-            ImportACOCommand = new DelegateCommand(ExecuteImportACO);
-            AddEntityCommand = new DelegateCommand(ExecuteAddEntity);
-            EditEntityCommand = new DelegateCommand(ExecuteEditEntity);
-            DeleteEntityCommand = new DelegateCommand(ExecuteDeleteEntity);
-        }
-		
-		
-        private void ExecuteImportATO() => System.Windows.MessageBox.Show("Import ATO");
-        private void ExecuteImportACO() => System.Windows.MessageBox.Show("Import ACO");
-        private void ExecuteEditEntity() => System.Windows.MessageBox.Show("Edit Entity");
-        private void ExecuteDeleteEntity() => System.Windows.MessageBox.Show("Delete Entity");
-
-        private void ExecuteNewScenario()
-        {
-            // Здесь логика, которая раньше была в NewScenario_Click
-            // Вместо создания окна напрямую:
-            // var wizard = new ScenarioWizard();
-            // wizard.ShowDialog();
-            
-            // Мы будем использовать сервис (пока закомментировано, реализуем позже)
-            // _dialogService.ShowScenarioWizard(); 
-            
-            // Пока что можно оставить MessageBox для проверки
-            System.Windows.MessageBox.Show("New Scenario Command Executed!");
+            get => _entities;
+            private set => SetProperty(ref _entities, value);
         }
 
-        private void ExecuteLoadScenario()
+        // Выбранная сущность может отсутствовать → делаем nullable: string?
+        private string? _selectedEntity;
+        public string? SelectedEntity
         {
-            // Логика загрузки сценария
+            get => _selectedEntity;
+            set
+            {
+                if (SetProperty(ref _selectedEntity, value))
+                {
+                    EditEntityCommand.RaiseCanExecuteChanged();
+                    DeleteEntityCommand.RaiseCanExecuteChanged();
+                }
+            }
         }
+
+        public DelegateCommand AddEntityCommand { get; }
+        public DelegateCommand EditEntityCommand { get; }
+        public DelegateCommand DeleteEntityCommand { get; }
+
+        public POEMainViewModel(IDialogService dialogs /*, IYourDataService data */)
+        {
+            _dialogs = dialogs;
+
+            // Демоданные
+            Entities = new ObservableCollection<string> { "Entity A", "Entity B", "Entity C" };
+
+            AddEntityCommand    = new DelegateCommand(ExecuteAddEntity);
+            EditEntityCommand   = new DelegateCommand(ExecuteEditEntity,  CanEditOrDelete);
+            DeleteEntityCommand = new DelegateCommand(ExecuteDeleteEntity, CanEditOrDelete);
+        }
+
+        private bool CanEditOrDelete() => !string.IsNullOrWhiteSpace(SelectedEntity);
 
         private void ExecuteAddEntity()
         {
-            // Логика добавления сущности (открытие MOE Editor через сервис)
-            System.Windows.MessageBox.Show("Add Entity Command Executed!");
+            var p = new DialogParameters
+            {
+                { "mode", "create" },
+                { "title", "Create New Entity" }
+            };
+
+            _dialogs.ShowDialog("MOEEditor", p, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    // var name = r.Parameters.GetValue<string>("name");
+                    // if (!string.IsNullOrWhiteSpace(name)) Entities.Add(name);
+                }
+            });
         }
 
-        private void ExecuteEditBehavior()
+        private void ExecuteEditEntity()
         {
-             // Логика редактирования поведения (открытие Behavior Editor через сервис)
-             System.Windows.MessageBox.Show("Edit Behavior Command Executed!");
+            if (SelectedEntity is null) return;
+
+            var p = new DialogParameters
+            {
+                { "mode", "edit" },
+                { "name", SelectedEntity },
+                { "title", $"Edit: {SelectedEntity}" }
+            };
+
+            _dialogs.ShowDialog("MOEEditor", p, r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    // var newName = r.Parameters.GetValue<string>("name");
+                    // if (!string.IsNullOrWhiteSpace(newName))
+                    // {
+                    //     var idx = Entities.IndexOf(SelectedEntity);
+                    //     if (idx >= 0) Entities[idx] = newName;
+                    // }
+                }
+            });
         }
-        
-        // ... Реализация остальных методов для команд
+
+        private void ExecuteDeleteEntity()
+        {
+            if (SelectedEntity is null) return;
+
+            // Пример confirm-диалога (если реализован):
+            // var p = new DialogParameters { { "message", $"Delete {SelectedEntity}?" }, { "title", "Confirm" } };
+            // _dialogs.ShowDialog("ConfirmDialog", p, r =>
+            // {
+            //     if (r.Result == ButtonResult.OK)
+            //     {
+            //         Entities.Remove(SelectedEntity);
+            //         SelectedEntity = null; // <- теперь допустимо (SelectedEntity — nullable)
+            //     }
+            // });
+
+            // Упрощённо (без подтверждения):
+            Entities.Remove(SelectedEntity);
+            SelectedEntity = null; // CS8625 исчезает, т.к. свойство допускает null
+        }
     }
 }

@@ -1,0 +1,33 @@
+<!-- src/Modules/POE/Views/MOE/MOEEditorDialog.xaml -->
+<UserControl x:Class="AFWGSS.POE.Views.MOE.MOEEditorDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Заголовок -->
+        <TextBlock Text="{Binding Title}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12"/>
+
+        <!-- Контент диалога (замените на свои поля/гриды) -->
+        <Border Grid.Row="1" Padding="8" BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" BorderThickness="1">
+            <TextBlock Text="TODO: содержимое MOE Editor" />
+        </Border>
+
+        <!-- Кнопки управления -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="OK" Width="100" Margin="0,0,8,0"
+                    Command="{Binding CloseCommand}" CommandParameter="OK" />
+            <Button Content="Cancel" Width="100"
+                    Command="{Binding CloseCommand}" CommandParameter="Cancel" />
+        </StackPanel>
+    </Grid>
+</UserControl>
