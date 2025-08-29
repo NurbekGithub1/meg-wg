@@ -9,10 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\UI\radarlogo.ico" />
+    <None Remove="Assets\UI\radarlogo_16.png" />
+    <None Remove="Assets\UI\radarlogo_256.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="GMap.NET.WinForms" Version="2.1.7" />
     <PackageReference Include="InfluxDB.Client" Version="4.13.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="6.1.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.0" />
@@ -30,6 +38,12 @@
     <ProjectReference Include="..\Modules\DAAOE\AFWGSS.DAAOE.csproj" />
     <ProjectReference Include="..\Modules\AAR\AFWGSS.AAR.csproj" />
     <ProjectReference Include="..\Modules\WGC\AFWGSS.WGC.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\UI\radarlogo.ico" />
+    <Resource Include="Assets\UI\radarlogo_16.png" />
+    <Resource Include="Assets\UI\radarlogo_256.png" />
   </ItemGroup>
 
 </Project>

@@ -1,34 +1,269 @@
-﻿<!-- src/AFWGSS.Main/MainWindow.xaml -->
-<mah:MetroWindow x:Class="AFWGSS.Main.MainWindow"
+﻿<mah:MetroWindow x:Class="AFWGSS.Main.MainWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:prism="http://prismlibrary.com/"
                  xmlns:shared="clr-namespace:AFWGSS.Shared;assembly=AFWGSS.Shared"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                  Title="AFWGSS" Height="720" Width="1280"
-                 prism:ViewModelLocator.AutoWireViewModel="True">
+                 prism:ViewModelLocator.AutoWireViewModel="True"
+                 FontFamily="Segoe UI"
+                 WindowTitleBrush="#1E2328"
+                 NonActiveWindowTitleBrush="#171B1F"
+                 TitleForeground="{DynamicResource SideBar.Text}"
+                 GlowBrush="{DynamicResource Accent.Orange}"
+                 ShowIconOnTitleBar="False"
+                 Icon="pack://application:,,,/Assets/UI/radarlogo.ico">
 
-    <Grid>
-        <DockPanel LastChildFill="True">
+    <!-- ===== Заголовок с логотипом ===== -->
+    <mah:MetroWindow.TitleTemplate>
+        <DataTemplate>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                <Image Source="pack://application:,,,/Assets/UI/radarlogo_16.png"
+               Width="18" Height="18"
+               RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=mah:MetroWindow}, Path=Title}"
+                   Margin="8,0,0,0"
+                   Foreground="{DynamicResource SideBar.Text}"
+                   FontWeight="SemiBold"
+                   FontSize="16"/>
+            </StackPanel>
+        </DataTemplate>
+    </mah:MetroWindow.TitleTemplate>
 
-            <!-- Верхняя панель навигации -->
-<ToolBar>
-    <RadioButton Content="POE" IsChecked="True"
-                 Command="{Binding NavigateCommand}" 
-                 CommandParameter="{x:Static shared:ViewKeys.POEMain}"/>
-    <RadioButton Content="DAAOE"
-                 Command="{Binding NavigateCommand}" 
-                 CommandParameter="{x:Static shared:ViewKeys.DAAOE}"/>
-    <RadioButton Content="AAR"
-                 Command="{Binding NavigateCommand}" 
-                 CommandParameter="{x:Static shared:ViewKeys.AAR}"/>
-    <RadioButton Content="WGC"
-                 Command="{Binding NavigateCommand}" 
-                 CommandParameter="{x:Static shared:ViewKeys.WGC}"/>
-</ToolBar>
+    <!-- ===== Палитра/стили ===== -->
+    <mah:MetroWindow.Resources>
+        <SolidColorBrush x:Key="SideBar.Background" Color="#2B3036"/>
+        <SolidColorBrush x:Key="SideBar.Border"     Color="#3A424A"/>
+        <SolidColorBrush x:Key="SideBar.Text"       Color="#C9D3DD"/>
 
-            <!-- Основной регион контента -->
-            <ContentControl prism:RegionManager.RegionName="{x:Static shared:RegionNames.ContentRegion}"/>
-        </DockPanel>
+        <SolidColorBrush x:Key="Accent.Orange"          Color="#F1993D"/>
+        <SolidColorBrush x:Key="Accent.Orange.Hover"    Color="#FFB86A"/>
+        <SolidColorBrush x:Key="Accent.Orange.Pressed"  Color="#E3892E"/>
+        <SolidColorBrush x:Key="Tab.Highlight"          Color="#16FFFFFF"/>
+
+        <!-- Общий стиль пунктов боковой навигации -->
+        <Style x:Key="SideNavTabStyle" TargetType="ToggleButton">
+            <Setter Property="Foreground" Value="{DynamicResource SideBar.Text}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="MinHeight" Value="40"/>
+            <Setter Property="Padding"   Value="12,8"/>
+            <Setter Property="Margin"    Value="0,6,0,0"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize"   Value="14"/>
+            <Setter Property="Cursor"     Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment"   Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid SnapsToDevicePixels="True">
+                            <Border x:Name="activeBg" Background="{DynamicResource Accent.Orange}" CornerRadius="6" Opacity="0"/>
+                            <ContentPresenter Margin="8,0,8,0" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                            <Border x:Name="hover" Background="{DynamicResource Tab.Highlight}" CornerRadius="6" Opacity="0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="hover" Property="Opacity" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="hover" Property="Background" Value="{DynamicResource Accent.Orange.Hover}"/>
+                                <Setter TargetName="hover" Property="Opacity" Value="0.25"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="activeBg" Property="Opacity" Value="1"/>
+                                <Setter Property="Foreground" Value="#111418"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <!-- При свёрнутой панели центрируем содержимое и уменьшаем отступы -->
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    <Setter Property="Padding" Value="8,8"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </mah:MetroWindow.Resources>
+
+    <!-- ===== Макет: левая колонка управляется из VM (SideBarWidth) ===== -->
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding SideBarWidth}"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая панель -->
+        <Border Grid.Column="0"
+            Padding="8"
+            Background="{DynamicResource SideBar.Background}"
+            BorderBrush="{DynamicResource SideBar.Border}"
+            BorderThickness="0,0,1,0">
+
+            <StackPanel Orientation="Vertical">
+
+                <!-- Гамбургер: свернуть/развернуть -->
+                <ToggleButton Margin="0,0,0,8"
+              IsChecked="{Binding IsSidebarCollapsed, Mode=TwoWay}">
+                    <!-- ЕДИНСТВЕННОЕ место, где задаём Style -->
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource SideNavTabStyle}">
+                            <Setter Property="ToolTip" Value="Свернуть меню"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                    <Setter Property="ToolTip" Value="Развернуть меню"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+
+                    <ToggleButton.ContentTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <!-- Иконка при раскрытой панели: свернуть (влево) -->
+                                <iconPacks:PackIconMaterial x:Name="CollapseIcon" Kind="ChevronLeft" Width="18" Height="18"/>
+                                <!-- Иконка при свёрнутой панели: развернуть (вправо) -->
+                                <iconPacks:PackIconMaterial x:Name="ExpandIcon" Kind="ChevronRight" Width="18" Height="18" Opacity="0"/>
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                    <Setter TargetName="CollapseIcon" Property="Opacity" Value="0"/>
+                                    <Setter TargetName="ExpandIcon"   Property="Opacity" Value="1"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ToggleButton.ContentTemplate>
+                </ToggleButton>
+
+                <!-- POE -->    
+                <ToggleButton Command="{Binding NavigateCommand}"
+                      CommandParameter="{x:Static shared:ViewKeys.POEMain}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource SideNavTabStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewKey}" Value="{x:Static shared:ViewKeys.POEMain}">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                        <iconPacks:PackIconMaterial Kind="VectorPolyline" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="POE" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- DAAOE -->
+                <ToggleButton Command="{Binding NavigateCommand}"
+                      CommandParameter="{x:Static shared:ViewKeys.DAAOE}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource SideNavTabStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewKey}" Value="{x:Static shared:ViewKeys.DAAOE}">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                        <iconPacks:PackIconMaterial Kind="PlayCircleOutline" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="DAAOE" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- AAR -->
+                <ToggleButton Command="{Binding NavigateCommand}"
+                      CommandParameter="{x:Static shared:ViewKeys.AAR}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource SideNavTabStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewKey}" Value="{x:Static shared:ViewKeys.AAR}">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                        <iconPacks:PackIconMaterial Kind="ChartLine" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="AAR" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- WGC -->
+                <ToggleButton Command="{Binding NavigateCommand}"
+                      CommandParameter="{x:Static shared:ViewKeys.WGC}">
+                    <ToggleButton.Style>
+                        <Style TargetType="ToggleButton" BasedOn="{StaticResource SideNavTabStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewKey}" Value="{x:Static shared:ViewKeys.WGC}">
+                                    <Setter Property="IsChecked" Value="True"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                    <StackPanel Orientation="Horizontal" Margin="6,0,0,0">
+                        <iconPacks:PackIconMaterial Kind="ViewGridOutline" Width="16" Height="16" VerticalAlignment="Center"/>
+                        <TextBlock Text="WGC" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSidebarCollapsed}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </ToggleButton>
+
+            </StackPanel>
+        </Border>
+
+        <!-- Правая область -->
+        <ContentControl Grid.Column="1"
+                        prism:RegionManager.RegionName="{x:Static shared:RegionNames.ContentRegion}"/>
     </Grid>
 </mah:MetroWindow>
